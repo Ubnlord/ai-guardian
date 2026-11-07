@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Guardian — extension options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="head">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </span>
+        <div>
+          <h1>AI Guardian — extension</h1>
+          <p class="sub">Point the extension at your Guardian instance and paste an API key.</p>
+        </div>
+      </header>
+
+      <form id="form" class="card">
+        <label class="field">
+          <span class="label">API base URL</span>
+          <input id="apiBase" name="apiBase" type="url" placeholder="https://ai-guardian.vercel.app" autocomplete="off" spellcheck="false" />
+          <span class="hint">Where your AI Guardian app is running. Use <code>http://localhost:3000</code> for local development.</span>
+        </label>
+
+        <label class="field">
+          <span class="label">API key</span>
+          <input id="apiKey" name="apiKey" type="password" placeholder="grd_live_…" autocomplete="off" spellcheck="false" />
+          <span class="hint">
+            Create one in AI Guardian → <strong>Settings → Browser extension</strong>. It is stored in your browser's synced storage and sent only to the base URL above.
+          </span>
+        </label>
+
+        <label class="check">
+          <input id="openReportInNewTab" name="openReportInNewTab" type="checkbox" />
+          <span>Open the full report in a new tab</span>
+        </label>
+
+        <div class="actions">
+          <button class="btn" type="submit">Save</button>
+          <button class="btn quiet" type="button" id="test">Test connection</button>
+          <span id="status" class="status" role="status"></span>
+        </div>
+      </form>
+
+      <section class="card help">
+        <h2>How to use it</h2>
+        <ol>
+          <li>Click the Guardian icon in the toolbar, or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>.</li>
+          <li>Or right-click anywhere on a page → <em>Check this page with AI Guardian</em>.</li>
+          <li>Select text first and the selection is checked instead of the whole page.</li>
+        </ol>
+        <p class="fine">The extension reads only the page address, its title, and any text you selected. It never reads passwords, form fields, or your browsing history.</p>
+      </section>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

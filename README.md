@@ -35,6 +35,9 @@ AI Guardian is a **second look** that takes ten seconds. It reads what you paste
 | 📊 **Insights dashboard** | Your own risk record, visualised: checks per day, average score over time, what you check most, score distribution, and the patterns that keep coming back. |
 | 🔔 **Notification centre** | One bell for everything that needs you — family-circle alerts, your own high-risk verdicts, fresh Guardian Watch reports, and low-allowance nudges. |
 | 🗂️ **Searchable history** | Full-text search plus filters by type and verdict. Export everything to **CSV**, or generate a **printable risk report**. |
+| 🧩 **Browser extension** | A Manifest V3 extension for Chrome, Edge, and Firefox. One click (or a right-click) checks the page you are on and shows the score, verdict, and reasons in a popup. |
+| 🖼️ **Scam cards** | Turn any check into a shareable warning image — score, verdict, scam type, warning signs, and one line of advice — ready for a family WhatsApp group. |
+| 📧 **Weekly digest** | A scheduled email summarising your week: checks run, average score, high-risk items, recurring patterns, and a tip. One-click unsubscribe. |
 | 👨‍👩‍👧 **Family Guardian** | A private circle with a shared safety phrase (stored as a hash) so "it's me, send the money" never works again. |
 | 📡 **Guardian Watch** | Community-reported numbers and links, so a scam caught by one person warns the next. |
 | 📚 **Lessons & playbooks** | Short, practical guidance and step-by-step playbooks for the situations that actually happen. |
@@ -62,6 +65,14 @@ AI Guardian is a **second look** that takes ten seconds. It reads what you paste
 | Mobile dashboard | Mobile number check |
 |---|---|
 | ![Mobile dashboard](screenshots/dashboard-mobile.png) | ![Mobile number](screenshots/number-mobile.png) |
+
+| Browser extension popup | Scam card |
+|---|---|
+| ![Extension popup](screenshots/extension-popup.png) | ![Scam card](screenshots/scam-card.png) |
+
+| Weekly digest email |
+|---|
+| ![Weekly digest](screenshots/digest-email.png) |
 
 ---
 
@@ -127,16 +138,129 @@ npm run build      # production build + migrations
 
 ```
 src/
-├── routes/                 # file-based pages (check, history, insights, report, watch, family, …)
-├── components/guardian/    # app shell, verdict card, notification bell, UI primitives
+├── routes/                 # file-based pages (check, history, insights, report, card, watch, family, …)
+│   └── api/                # server endpoints: check (extension), digest (send / preview / unsubscribe)
+├── components/guardian/    # app shell, verdict card, notification bell, scam-card studio, UI primitives
 ├── lib/
-│   ├── guardian/           # domain logic: heuristics, plans, watch, insights, notify, api
+│   ├── guardian/           # domain logic: heuristics, plans, watch, insights, notify, share-card, digest, api
 │   ├── auth/               # Better Auth client, middleware, gates
 │   └── db.ts               # Postgres / PGlite connection
-migrations/                 # SQL schema (auth, guardian, watch, profile)
+extension/                  # Manifest V3 browser extension (Chrome / Edge / Firefox)
+├── manifest.json           # permissions, action, options, commands
+├── background.js           # service worker: context menus + the check request
+├── popup.html/css/js       # the result popup
+├── options.html/css/js     # API base URL + key, connection test
+├── lib/guardian-api.js     # settings, the API call, result hand-off
+└── icons/                  # toolbar and store icons (16/32/48/128)
+migrations/                 # SQL schema (auth, guardian, watch, profile, api keys, digest)
 scripts/                    # env loader, migrator, preview + smoke tooling
 screenshots/                # product captures used in this README
 ```
+
+---
+
+## The browser extension
+
+One click checks the page you are on. The extension lives in [`extension/`](./extension) and
+is a plain **Manifest V3** add-on — no build step, so "load unpacked" works straight
+from a clone.
+
+**What it does**
+
+- **Toolbar button** — click the Guardian icon, or press `Alt`+`Shift`+`G`.
+- **Right-click menu** — *Check this page with AI Guardian*, or *Check the selected text*.
+- **Popup result** — risk score, verdict, the top reasons, what to do next, and a link
+  that opens the full report in the app.
+- **Options page** — point it at your own instance and paste an API key.
+
+**What it reads:** only the page **address**, its **title**, and any **text you
+selected** — and only when you click. It never reads passwords, form fields, cookies,
+or your browsing history.
+
+**Install (Chrome / Edge)**
+
+1. Open `chrome://extensions` (or `edge://extensions`) and turn on **Developer mode**.
+2. Click **Load unpacked** and select the **`extension/`** folder.
+3. Pin the Guardian icon to the toolbar.
+
+**Install (Firefox)** — open `about:debugging#/runtime/this-firefox`, click **Load
+Temporary Add-on…**, and pick `extension/manifest.json`. The manifest already carries
+a `browser_specific_settings.gecko` block.
+
+**Connect it** — in the app, go to **Settings → Browser extension**, create a key
+(shown once), then paste it into the extension options along with your API base URL.
+
+**How it works**
+
+```
+click / context menu
+        │
+        ▼
+background.js  ── reads url + title + selection (activeTab)
+        │
+        ▼
+POST {apiBase}/api/check   Authorization: Bearer grd_live_…
+        │
+        ▼
+popup.js  ── score, verdict, reasons, actions, link to full report
+```
+
+The service worker holds the key and does the page read; the popup only renders. Keys
+are stored as a SHA-256 hash server-side and are scoped to the account that created
+them, so a key can never check on someone else's behalf. See
+[`extension/README.md`](./extension/README.md) for the full guide.
+
+---
+
+## Scam cards
+
+A verdict is only useful if you can pass it on. **Scam cards** turn any check into a
+square image you can drop into a family group chat: the score, the verdict, the scam
+type, the top warning signs, and one line of what to do.
+
+- Open **Scam card** in the sidebar, or choose *Make a scam card* on any result in
+  **History**.
+- Pick from three themes — **Guardian**, **Alert**, and **Paper** (light, for printing).
+- **Download PNG** (1080×1080, rendered at 2× so it stays sharp), **Share** through the
+  OS share sheet (which is how it reaches WhatsApp on a phone), or **Copy link** to the
+  full check.
+
+The card is drawn entirely in your browser with the Canvas API — nothing is uploaded,
+and the renderer (`src/lib/guardian/share-card.ts`) is pure, so it can be unit-tested
+in Node.
+
+---
+
+## Weekly digest
+
+Once a week, Guardian emails you your own risk record: how many checks you ran, your
+average score, anything that came back high risk, the patterns that kept showing up,
+and a rotating tip.
+
+- **Preview it** — **Settings → Weekly risk digest → Preview this week's email**, or
+  open `/api/digest/preview` directly. It renders the exact HTML the email sends.
+- **Turn it off** — the toggle in **Settings**, or the one-click unsubscribe link in
+  every email footer (RFC 8058, so Gmail and Apple Mail can do it without a click).
+- **Send it** — `POST /api/digest/send` with `Authorization: Bearer $DIGEST_SECRET`.
+  `vercel.json` schedules it for **Mondays at 14:00 UTC**.
+
+```bash
+# Send this week's digests by hand
+curl -X POST https://your-app.example.com/api/digest/send \
+  -H "Authorization: Bearer $DIGEST_SECRET"
+```
+
+Delivery uses Resend's REST API over `fetch` — no SDK, no dependency. Set
+`RESEND_API_KEY` and (optionally) `DIGEST_FROM` to enable sending; without a key the
+job reports `skipped` rather than failing, so an environment that has not been wired up
+yet still answers honestly.
+
+| Variable | Purpose |
+| --- | --- |
+| `RESEND_API_KEY` | Enables sending. Without it, the job skips. |
+| `DIGEST_FROM` | From address, e.g. `AI Guardian <digest@your-domain.com>`. |
+| `DIGEST_SECRET` | Protects `POST /api/digest/send`. Falls back to `CRON_SECRET`. |
+| `APP_URL` | Base URL used in email links. Falls back to `VITE_APP_URL`. |
 
 ---
 
@@ -151,9 +275,9 @@ screenshots/                # product captures used in this README
 - [x] **History search, filters, and CSV export**
 - [x] **Printable risk report**
 - [x] **First-run onboarding**
-- [ ] Browser extension that checks a page in one click
-- [ ] Shareable "scam card" images for warning friends and family
-- [ ] Weekly email digest of your risk record
+- [x] **Browser extension** that checks a page in one click
+- [x] **Shareable "scam card"** images for warning friends and family
+- [x] **Weekly email digest** of your risk record
 - [ ] Offline-first PWA with on-device checks
 - [ ] Public API for banks, telcos, and community groups
 

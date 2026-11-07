@@ -10,6 +10,7 @@ import {
   Radar,
   ScanSearch,
   Settings,
+  Share2,
   ShieldAlert,
   Sun,
   Moon,
@@ -33,6 +34,7 @@ const NAV = [
   { to: "/home", key: "dashboard", icon: LayoutDashboard },
   { to: "/check", key: "check", icon: ScanSearch },
   { to: "/history", key: "history", icon: History },
+  { to: "/card", key: "scamCard", icon: Share2 },
   { to: "/insights", key: "insights", icon: BarChart3 },
   { to: "/watch", key: "watch", icon: Radar },
   { to: "/learn", key: "lessons", icon: BookOpen },
@@ -44,6 +46,7 @@ const NAV = [
 ] as const;
 
 const MORE = [
+  { to: "/card" as const, key: "scamCard" as const, icon: Share2 },
   { to: "/insights" as const, key: "insights" as const, icon: BarChart3 },
   { to: "/learn" as const, key: "lessons" as const, icon: BookOpen },
   { to: "/watch" as const, key: "watch" as const, icon: Radar },

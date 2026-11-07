@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Download, FileText, Search, X } from "lucide-react";
+import { Download, FileText, Search, Share2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Authed } from "@/components/guardian/frame";
 import { Button, Notice, PageIntro, when } from "@/components/guardian/ui";
@@ -250,16 +250,26 @@ function HistoryPage() {
             {open === row.id ? (
               <div className="mt-2 space-y-2">
                 <VerdictCard analysis={toAnalysis(row)} />
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    void deleteCheck({ data: { id: row.id } }).then(() => {
-                      setRows((current) => current?.filter((item) => item.id !== row.id) ?? null);
-                    });
-                  }}
-                >
-                  Delete this check
-                </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link
+                    to="/card"
+                    search={{ check: row.id }}
+                    className="btn inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-surface-2 px-4 text-sm font-semibold text-fg"
+                  >
+                    <Share2 className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                    Make a scam card
+                  </Link>
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      void deleteCheck({ data: { id: row.id } }).then(() => {
+                        setRows((current) => current?.filter((item) => item.id !== row.id) ?? null);
+                      });
+                    }}
+                  >
+                    Delete this check
+                  </Button>
+                </div>
               </div>
             ) : null}
           </li>

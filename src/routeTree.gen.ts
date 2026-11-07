@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CardRouteImport } from './routes/card'
 import { Route as CheckRouteImport } from './routes/check'
 import { Route as FamilyRouteImport } from './routes/family'
 import { Route as HistoryRouteImport } from './routes/history'
@@ -25,6 +26,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WatchRouteImport } from './routes/watch'
+import { Route as ApiCheckRouteImport } from './routes/api/check'
 import { Route as CheckIndexRouteImport } from './routes/check.index'
 import { Route as CheckImageRouteImport } from './routes/check.image'
 import { Route as CheckInvestmentRouteImport } from './routes/check.investment'
@@ -34,6 +36,9 @@ import { Route as CheckUrlRouteImport } from './routes/check.url'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiDigestPreviewRouteImport } from './routes/api/digest/preview'
+import { Route as ApiDigestSendRouteImport } from './routes/api/digest/send'
+import { Route as ApiDigestUnsubscribeRouteImport } from './routes/api/digest/unsubscribe'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -43,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CardRoute = CardRouteImport.update({
+  id: '/card',
+  path: '/card',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckRoute = CheckRouteImport.update({
@@ -115,6 +125,11 @@ const WatchRoute = WatchRouteImport.update({
   path: '/watch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCheckRoute = ApiCheckRouteImport.update({
+  id: '/api/check',
+  path: '/api/check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckIndexRoute = CheckIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -160,10 +175,26 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDigestPreviewRoute = ApiDigestPreviewRouteImport.update({
+  id: '/api/digest/preview',
+  path: '/api/digest/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDigestSendRoute = ApiDigestSendRouteImport.update({
+  id: '/api/digest/send',
+  path: '/api/digest/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDigestUnsubscribeRoute = ApiDigestUnsubscribeRouteImport.update({
+  id: '/api/digest/unsubscribe',
+  path: '/api/digest/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/card': typeof CardRoute
   '/check': typeof CheckRouteWithChildren
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
@@ -178,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
+  '/api/check': typeof ApiCheckRoute
   '/check/image': typeof CheckImageRoute
   '/check/investment': typeof CheckInvestmentRoute
   '/check/message': typeof CheckMessageRoute
@@ -187,10 +219,14 @@ export interface FileRoutesByFullPath {
   '/check/': typeof CheckIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/digest/preview': typeof ApiDigestPreviewRoute
+  '/api/digest/send': typeof ApiDigestSendRoute
+  '/api/digest/unsubscribe': typeof ApiDigestUnsubscribeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/card': typeof CardRoute
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/home': typeof HomeRoute
@@ -203,6 +239,7 @@ export interface FileRoutesByTo {
   '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
+  '/api/check': typeof ApiCheckRoute
   '/check/image': typeof CheckImageRoute
   '/check/investment': typeof CheckInvestmentRoute
   '/check/message': typeof CheckMessageRoute
@@ -212,11 +249,15 @@ export interface FileRoutesByTo {
   '/check': typeof CheckIndexRoute
   '/learn': typeof LearnIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/digest/preview': typeof ApiDigestPreviewRoute
+  '/api/digest/send': typeof ApiDigestSendRoute
+  '/api/digest/unsubscribe': typeof ApiDigestUnsubscribeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/card': typeof CardRoute
   '/check': typeof CheckRouteWithChildren
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
@@ -231,6 +272,7 @@ export interface FileRoutesById {
   '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
+  '/api/check': typeof ApiCheckRoute
   '/check/image': typeof CheckImageRoute
   '/check/investment': typeof CheckInvestmentRoute
   '/check/message': typeof CheckMessageRoute
@@ -240,12 +282,16 @@ export interface FileRoutesById {
   '/check/': typeof CheckIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/digest/preview': typeof ApiDigestPreviewRoute
+  '/api/digest/send': typeof ApiDigestSendRoute
+  '/api/digest/unsubscribe': typeof ApiDigestUnsubscribeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
+    | '/card'
     | '/check'
     | '/family'
     | '/history'
@@ -260,6 +306,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/settings'
     | '/watch'
+    | '/api/check'
     | '/check/image'
     | '/check/investment'
     | '/check/message'
@@ -269,10 +316,14 @@ export interface FileRouteTypes {
     | '/check/'
     | '/learn/'
     | '/api/auth/$'
+    | '/api/digest/preview'
+    | '/api/digest/send'
+    | '/api/digest/unsubscribe'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
+    | '/card'
     | '/family'
     | '/history'
     | '/home'
@@ -285,6 +336,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/settings'
     | '/watch'
+    | '/api/check'
     | '/check/image'
     | '/check/investment'
     | '/check/message'
@@ -294,10 +346,14 @@ export interface FileRouteTypes {
     | '/check'
     | '/learn'
     | '/api/auth/$'
+    | '/api/digest/preview'
+    | '/api/digest/send'
+    | '/api/digest/unsubscribe'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/card'
     | '/check'
     | '/family'
     | '/history'
@@ -312,6 +368,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/settings'
     | '/watch'
+    | '/api/check'
     | '/check/image'
     | '/check/investment'
     | '/check/message'
@@ -321,11 +378,15 @@ export interface FileRouteTypes {
     | '/check/'
     | '/learn/'
     | '/api/auth/$'
+    | '/api/digest/preview'
+    | '/api/digest/send'
+    | '/api/digest/unsubscribe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  CardRoute: typeof CardRoute
   CheckRoute: typeof CheckRouteWithChildren
   FamilyRoute: typeof FamilyRoute
   HistoryRoute: typeof HistoryRoute
@@ -340,7 +401,11 @@ export interface RootRouteChildren {
   ReportRoute: typeof ReportRoute
   SettingsRoute: typeof SettingsRoute
   WatchRoute: typeof WatchRoute
+  ApiCheckRoute: typeof ApiCheckRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiDigestPreviewRoute: typeof ApiDigestPreviewRoute
+  ApiDigestSendRoute: typeof ApiDigestSendRoute
+  ApiDigestUnsubscribeRoute: typeof ApiDigestUnsubscribeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -357,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/card': {
+      id: '/card'
+      path: '/card'
+      fullPath: '/card'
+      preLoaderRoute: typeof CardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/check': {
@@ -457,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/check': {
+      id: '/api/check'
+      path: '/api/check'
+      fullPath: '/api/check'
+      preLoaderRoute: typeof ApiCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/check/': {
       id: '/check/'
       path: '/'
@@ -520,6 +599,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/digest/preview': {
+      id: '/api/digest/preview'
+      path: '/api/digest/preview'
+      fullPath: '/api/digest/preview'
+      preLoaderRoute: typeof ApiDigestPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/digest/send': {
+      id: '/api/digest/send'
+      path: '/api/digest/send'
+      fullPath: '/api/digest/send'
+      preLoaderRoute: typeof ApiDigestSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/digest/unsubscribe': {
+      id: '/api/digest/unsubscribe'
+      path: '/api/digest/unsubscribe'
+      fullPath: '/api/digest/unsubscribe'
+      preLoaderRoute: typeof ApiDigestUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -558,6 +658,7 @@ const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  CardRoute: CardRoute,
   CheckRoute: CheckRouteWithChildren,
   FamilyRoute: FamilyRoute,
   HistoryRoute: HistoryRoute,
@@ -572,7 +673,11 @@ const rootRouteChildren: RootRouteChildren = {
   ReportRoute: ReportRoute,
   SettingsRoute: SettingsRoute,
   WatchRoute: WatchRoute,
+  ApiCheckRoute: ApiCheckRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiDigestPreviewRoute: ApiDigestPreviewRoute,
+  ApiDigestSendRoute: ApiDigestSendRoute,
+  ApiDigestUnsubscribeRoute: ApiDigestUnsubscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

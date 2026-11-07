@@ -1156,3 +1156,46 @@ export const reportScam = createServerFn({ method: "POST" }).middleware([authMid
     `;
 	return { ok: true };
 });
+
+/**
+ * One-call check for the browser extension (`POST /api/check`).
+ *
+ * The extension cannot carry a session cookie, so this entry point takes a
+ * verified `userId` (resolved from an API key in the route handler) instead of
+ * `context.userId`, and returns the same `Analysis` shape the web app renders.
+ *
+ * What it checks, in order:
+ *   1. the selected text, when there is one — that is what the person pointed at
+ *   2. otherwise the page title plus its address, which is what a cloned shop,
+ *      a fake bank login, or a "your parcel is held" page is made of
+ *
+ * The URL is always included, because the address is the tell on a phishing page
+ * even when the visible copy is stolen from the real thing.
+ */
+export async function runApiCheck(userId, input) {
+const url = textField(input?.url, 2e3);
+const title = textField(input?.title, 300);
+const selection = textField(input?.selection, 4e3);
+if (url.length < 4 && selection.length < 8) throw new Error("Send the page address, or the text you selected.");
+const gate = await gateCheck(userId, "url");
+if (!gate.ok) return gate;
+const watched = asPlan(gate.profile.plan) === "business" ? await watchedFor(userId) : [];
+const rules = scoreUrl(url, watched);
+const reported = selection
+? `They selected this text on the page and asked Guardian about it:\n${selection}`
+: `The page headline reads: ${title || "no title"}`;
+const ai = await askModel(`A person is looking at a live web page and pressed the Guardian button. Review the address for impersonation, phishing, or scam signals, using the page text as context. Do not claim you opened the page. You did not.
+Address: ${url}
+${reported}
+Watched brand domains: ${watched.join(", ") || "none"}
+Pattern pre-check score ${rules.score}/100. Reasons: ${rules.reasons.join(" | ")}`, void 0, gate.profile);
+const merged = await withWatch(`${url}\n${title}\n${selection}`, merge(ai, rules, "AI review was unavailable. This score only reads the address text and the page wording. It did not open the page."));
+const saved = await finishCheck({
+userId,
+profile: gate.profile,
+kind: "url",
+excerpt: url,
+merged
+});
+return saved;
+}

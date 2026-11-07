@@ -191,3 +191,37 @@ export const searchHistory = createServerFn({ method: "GET" })
       limit 200
     `;
   });
+
+/**
+ * One saved check by id, scoped to the caller.
+ *
+ * Used by the scam-card page, which needs the full record (reasons, actions) for
+ * a single check rather than the list. Returns null when the id is unknown or
+ * belongs to somebody else — the `user_id` filter is what makes that safe.
+ */
+export const getCheck = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) => ({ id: csvText((input as { id?: unknown })?.id, 80) }))
+  .handler(async ({ context, data }): Promise<HistoryRow | null> => {
+    if (!data.id) return null;
+    const sql = await getSql();
+    const rows = await sql<HistoryRow>`
+      select
+        id,
+        kind,
+        verdict,
+        score::int as score,
+        title,
+        summary,
+        reasons,
+        actions,
+        uncertainty,
+        source,
+        excerpt,
+        to_char(created_at at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as "createdAt"
+      from checks
+      where user_id = ${context.userId} and id = ${data.id}
+      limit 1
+    `;
+    return rows[0] ?? null;
+  });

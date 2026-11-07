@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Authed } from "@/components/guardian/frame";
 import { Button, Notice, PageIntro, Panel, TextInput } from "@/components/guardian/ui";
 import { usePrefs, AccountControls } from "@/components/prefs";
+import { ApiKeysPanel } from "@/components/guardian/api-keys-panel";
+import { DigestPanel } from "@/components/guardian/digest-panel";
 import { addDomain, clearHistory, listDomains, removeDomain, updateSettings } from "@/lib/guardian/api";
 import { useGuardian } from "@/lib/guardian/store";
 import type { Me } from "@/lib/guardian/types";
@@ -147,6 +149,10 @@ function SettingsPage() {
           </Link>
         )}
       </Panel>
+
+      <DigestPanel />
+
+      <ApiKeysPanel />
 
       <Panel className="mt-4">
         <h2 className="font-semibold">Delete saved checks</h2>
