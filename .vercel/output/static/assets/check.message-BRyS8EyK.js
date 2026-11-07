@@ -1,0 +1,1 @@
+import{t as e}from"./frame-DSn1lua6.js";import{o as t}from"./useSelector-DVkoJ9pC.js";import{t as n}from"./checker-njBTtJOM.js";var r=t(),i=()=>(0,r.jsx)(e,{children:(0,r.jsx)(n,{kind:`message`})});export{i as component};

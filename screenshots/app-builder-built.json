@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "AI Guardian",
+      "hasCanvas": false,
+      "bodyTextLen": 3786,
+      "bodyTextHash": "32f615fa03365527c4b0fd3603559b96ff7c2481f07ba41527636cb2e7b66e19",
+      "bodyTextPrefix": "AI Guardian BODYGUARD Pricing Lessons Sign in BEFORE YOU CLICK, ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "AI Guardian",
+      "hasCanvas": false,
+      "bodyTextLen": 3770,
+      "bodyTextHash": "d0dd38ade35bb308bd411c7595354ce362d69299c43e45245ec0850878005db0",
+      "bodyTextPrefix": "AI Guardian BODYGUARD Sign in BEFORE YOU CLICK, PAY, OR REPLY Is",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "desktop: body text replaced (similar length, page start changed)"
+  ]
+}
