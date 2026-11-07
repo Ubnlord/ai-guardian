@@ -1,0 +1,13 @@
+# Local tooling and design references never need to reach a Vercel build image.
+.grok/
+.git/
+.github/
+attachments/
+screenshots/
+
+# Build output is gitignored and produced by the build itself.
+.vercel/output
+
+# CI and editor noise.
+*.log
+.DS_Store

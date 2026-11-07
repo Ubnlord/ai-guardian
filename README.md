@@ -7,6 +7,7 @@
 Paste a message, a link, a number, a photo, or an "investment" — get a straight answer, the reasons behind it, and the next move. Built for the scams people actually get: cloned banks, fake job offers, money-doubling schemes, and a voice that sounds like family.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](./LICENSE)
+[![CI/CD](https://github.com/Ubnlord/ai-guardian/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Ubnlord/ai-guardian/actions/workflows/ci-cd.yml)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![TanStack Start](https://img.shields.io/badge/TanStack-Start-ff4154.svg)
@@ -90,6 +91,9 @@ AI Guardian is a **second look** that takes ten seconds. It reads what you paste
 ## Getting started
 
 ### 1. Install
+
+Requires **Node 22.18+** (see `.nvmrc`) — `npm test` uses `--experimental-strip-types`, which
+Node 20 does not support.
 
 ```bash
 npm install
@@ -261,6 +265,68 @@ yet still answers honestly.
 | `DIGEST_FROM` | From address, e.g. `AI Guardian <digest@your-domain.com>`. |
 | `DIGEST_SECRET` | Protects `POST /api/digest/send`. Falls back to `CRON_SECRET`. |
 | `APP_URL` | Base URL used in email links. Falls back to `VITE_APP_URL`. |
+
+---
+
+## CI/CD
+
+Every push to `main` builds and deploys the app through **GitHub Actions**
+([`.github/workflows/ci-cd.yml`](./.github/workflows/ci-cd.yml)). Pull requests run the
+build only.
+
+```
+push to main ──► build ──► deploy to Vercel (production)
+                    └────► config-health (what still needs setting)
+```
+
+**Build** — Node 22, `npm ci` with the npm cache, `npm run build`. The build emits
+`.vercel/output` (Nitro's `vercel` preset), which is verified and uploaded as an artifact.
+**`npm run build` is the gate**: `npm run typecheck` runs and reports its error count
+against a known baseline of 13 pre-existing errors, but does not block, so a change is never
+stopped by errors it did not cause.
+
+**Deploy** — `main` only. Ships the *exact* artifact the build job produced
+(`vercel deploy --prebuilt --prod`), so what you build is what you deploy.
+
+**Missing secrets never fail the build.** If a Vercel secret is absent the deploy job skips
+and writes a summary naming exactly which one — the run stays green, the artifact stays
+attached, and adding the secret plus **Re-run all jobs** deploys without a new commit.
+
+### Required repository secrets
+
+Add under **Settings → Secrets and variables → Actions**.
+
+| Secret | Needed for | Without it |
+| --- | --- | --- |
+| `VERCEL_TOKEN` | Deploy | Deploy job skips (build still passes) |
+| `VERCEL_ORG_ID` | Deploy | Deploy job skips (build still passes) |
+| `VERCEL_PROJECT_ID` | Deploy | Deploy job skips (build still passes) |
+
+Optional for the build step: `DATABASE_URL` (applies migrations during build),
+`XAI_API_KEY`, `BETTER_AUTH_SECRET`, `VITE_APP_URL`, `VITE_AUTH_ENABLED`.
+
+> If `DATABASE_URL` **is** set, it must be reachable: `npm run build` is
+> `vite build && db:migrate`, so an unreachable database fails the build (and therefore
+> blocks the deploy). That is intentional — you never ship a build against an unmigrated
+> database. Leave the secret unset to build without migrations.
+
+### Runtime environment variables
+
+GitHub secrets configure **CI**; the deployed app reads its environment from **Vercel →
+Project → Settings → Environment Variables**. Set these there as well or the build will
+succeed while the running app is missing features.
+
+| Variable | Required? | Without it |
+| --- | --- | --- |
+| `DATABASE_URL` | Strongly recommended | Embedded PGlite fallback — data does not persist across deploys |
+| `BETTER_AUTH_SECRET` | Strongly recommended | Sessions drop on every redeploy |
+| `BETTER_AUTH_URL` / `APP_URL` | Recommended | Wrong redirect origin / digest links |
+| `XAI_API_KEY` | Optional | Rules engine only, no natural-language layer |
+| `RESEND_API_KEY` | Optional | Weekly digest reports `skipped` |
+| `DIGEST_SECRET` | Optional | `/api/digest/send` answers 503 |
+
+> **Full instructions — where to find each value, what each one breaks, the step-by-step
+> workflow and a troubleshooting table — are in [`DEPLOYMENT.md`](./DEPLOYMENT.md).**
 
 ---
 

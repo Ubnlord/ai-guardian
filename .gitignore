@@ -2,7 +2,10 @@
 node_modules/
 .pnpm-store/
 
-# Build output
+# Build output — never committed. CI builds it and uploads `.vercel/output` as an
+# artifact; `vercel deploy --prebuilt` ships that artifact (see
+# .github/workflows/ci-cd.yml). Committing it instead means every build rewrites
+# ~180 content-hashed filenames, producing enormous no-op diffs.
 dist/
 .output/
 .vercel/
