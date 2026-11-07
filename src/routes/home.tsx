@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { BookMarked, Image as ImageIcon, Radar, TrendingUp } from "lucide-react";
+import { BarChart3, BookMarked, FileText, Image as ImageIcon, Radar, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Authed } from "@/components/guardian/frame";
 import { Notice, Panel, UsageBar, when } from "@/components/guardian/ui";
@@ -9,6 +9,7 @@ import { takeSharedPaste } from "@/lib/guardian/share";
 import { useGuardian } from "@/lib/guardian/store";
 import type { DashboardData } from "@/lib/guardian/types";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { hasOnboarded } from "./onboarding";
 
 export const Route = createFileRoute("/home")({ component: HomeRoute });
 
@@ -57,6 +58,12 @@ function Dashboard() {
       cancel = true;
     };
   }, [user?.id, setMe]);
+
+  // First-run: send brand-new accounts (no checks yet) through onboarding once.
+  useEffect(() => {
+    if (!data || hasOnboarded()) return;
+    if (data.counts.total === 0) void navigate({ to: "/onboarding" });
+  }, [data, navigate]);
 
   const { t } = usePrefs();
   const hour = new Date().getHours();
@@ -118,6 +125,8 @@ function Dashboard() {
         <Quick to="/check/investment" title="Investment" icon={TrendingUp} />
         <Quick to="/watch" title="Watch" icon={Radar} />
         <Quick to="/playbooks" title="Playbook" icon={BookMarked} />
+        <Quick to="/insights" title="Insights" icon={BarChart3} />
+        <Quick to="/report" title="Report" icon={FileText} />
       </div>
 
       {data ? <UsageBar used={data.me.checksUsed} limit={data.me.checksLimit} /> : null}
@@ -159,7 +168,7 @@ function Quick({
   title,
   icon: Icon,
 }: {
-  to: "/check/image" | "/check/investment" | "/watch" | "/playbooks";
+  to: "/check/image" | "/check/investment" | "/watch" | "/playbooks" | "/insights" | "/report";
   title: string;
   icon: typeof ImageIcon;
 }) {

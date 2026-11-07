@@ -389,6 +389,32 @@ html[data-theme="light"] {
   }
 }
 
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .shell-side,
+  .app-dock,
+  header.sticky,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .panel {
+    box-shadow: none !important;
+    border: 1px solid #d5d5d5;
+    break-inside: avoid;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}
+
 @property --sweep {
   syntax: "<number>";
   inherits: true;

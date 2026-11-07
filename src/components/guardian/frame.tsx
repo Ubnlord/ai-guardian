@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  BarChart3,
   BookOpen,
   Ellipsis,
   History,
@@ -25,12 +26,14 @@ import { PLANS } from "@/lib/guardian/plans";
 import { useGuardian } from "@/lib/guardian/store";
 import { isLocale, LOCALES, type CopyKey } from "@/lib/i18n";
 import type { Me } from "@/lib/guardian/types";
+import { NoticeBell } from "./notice-bell";
 import { Wordmark, UsageBar } from "./ui";
 
 const NAV = [
   { to: "/home", key: "dashboard", icon: LayoutDashboard },
   { to: "/check", key: "check", icon: ScanSearch },
   { to: "/history", key: "history", icon: History },
+  { to: "/insights", key: "insights", icon: BarChart3 },
   { to: "/watch", key: "watch", icon: Radar },
   { to: "/learn", key: "lessons", icon: BookOpen },
   { to: "/family", key: "family", icon: Users },
@@ -41,6 +44,7 @@ const NAV = [
 ] as const;
 
 const MORE = [
+  { to: "/insights" as const, key: "insights" as const, icon: BarChart3 },
   { to: "/learn" as const, key: "lessons" as const, icon: BookOpen },
   { to: "/watch" as const, key: "watch" as const, icon: Radar },
   { to: "/playbooks" as const, key: "playbooks" as const, icon: ListChecks },
@@ -88,9 +92,12 @@ export function Frame({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-bg text-fg md:grid md:grid-cols-[16rem_1fr]">
       <aside className="shell-side hidden md:flex md:min-h-screen md:flex-col md:px-3 md:py-5">
-        <Link to="/home" className="px-2">
-          <Wordmark />
-        </Link>
+        <div className="flex items-center justify-between gap-2 px-2">
+          <Link to="/home">
+            <Wordmark />
+          </Link>
+          <NoticeBell />
+        </div>
         <SideNav items={items} pathname={pathname} t={t} me={me} />
       </aside>
 
@@ -128,10 +135,11 @@ export function Frame({ children }: { children: ReactNode }) {
       ) : null}
 
       <div className="min-w-0 pb-24 md:pb-0">
-        <header className="sticky top-0 z-20 flex items-center border-b border-line bg-bg/90 px-4 py-3 backdrop-blur md:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-line bg-bg/90 px-4 py-3 backdrop-blur md:hidden">
           <Link to="/home">
             <Wordmark compact />
           </Link>
+          <NoticeBell />
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>

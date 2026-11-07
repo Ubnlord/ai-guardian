@@ -15,11 +15,14 @@ import { Route as CheckRouteImport } from './routes/check'
 import { Route as FamilyRouteImport } from './routes/family'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as PlaybooksRouteImport } from './routes/playbooks'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WatchRouteImport } from './routes/watch'
 import { Route as CheckIndexRouteImport } from './routes/check.index'
@@ -62,6 +65,11 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnRoute = LearnRouteImport.update({
   id: '/learn',
   path: '/learn',
@@ -70,6 +78,11 @@ const LearnRoute = LearnRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlansRoute = PlansRouteImport.update({
@@ -85,6 +98,11 @@ const PlaybooksRoute = PlaybooksRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -150,11 +168,14 @@ export interface FileRoutesByFullPath {
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/playbooks': typeof PlaybooksRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
   '/check/image': typeof CheckImageRoute
@@ -173,10 +194,13 @@ export interface FileRoutesByTo {
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/playbooks': typeof PlaybooksRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
   '/check/image': typeof CheckImageRoute
@@ -197,11 +221,14 @@ export interface FileRoutesById {
   '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/playbooks': typeof PlaybooksRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
   '/settings': typeof SettingsRoute
   '/watch': typeof WatchRoute
   '/check/image': typeof CheckImageRoute
@@ -223,11 +250,14 @@ export interface FileRouteTypes {
     | '/family'
     | '/history'
     | '/home'
+    | '/insights'
     | '/learn'
     | '/login'
+    | '/onboarding'
     | '/plans'
     | '/playbooks'
     | '/profile'
+    | '/report'
     | '/settings'
     | '/watch'
     | '/check/image'
@@ -246,10 +276,13 @@ export interface FileRouteTypes {
     | '/family'
     | '/history'
     | '/home'
+    | '/insights'
     | '/login'
+    | '/onboarding'
     | '/plans'
     | '/playbooks'
     | '/profile'
+    | '/report'
     | '/settings'
     | '/watch'
     | '/check/image'
@@ -269,11 +302,14 @@ export interface FileRouteTypes {
     | '/family'
     | '/history'
     | '/home'
+    | '/insights'
     | '/learn'
     | '/login'
+    | '/onboarding'
     | '/plans'
     | '/playbooks'
     | '/profile'
+    | '/report'
     | '/settings'
     | '/watch'
     | '/check/image'
@@ -294,11 +330,14 @@ export interface RootRouteChildren {
   FamilyRoute: typeof FamilyRoute
   HistoryRoute: typeof HistoryRoute
   HomeRoute: typeof HomeRoute
+  InsightsRoute: typeof InsightsRoute
   LearnRoute: typeof LearnRouteWithChildren
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   PlansRoute: typeof PlansRoute
   PlaybooksRoute: typeof PlaybooksRoute
   ProfileRoute: typeof ProfileRoute
+  ReportRoute: typeof ReportRoute
   SettingsRoute: typeof SettingsRoute
   WatchRoute: typeof WatchRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -348,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn': {
       id: '/learn'
       path: '/learn'
@@ -360,6 +406,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plans': {
@@ -381,6 +434,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -502,11 +562,14 @@ const rootRouteChildren: RootRouteChildren = {
   FamilyRoute: FamilyRoute,
   HistoryRoute: HistoryRoute,
   HomeRoute: HomeRoute,
+  InsightsRoute: InsightsRoute,
   LearnRoute: LearnRouteWithChildren,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   PlansRoute: PlansRoute,
   PlaybooksRoute: PlaybooksRoute,
   ProfileRoute: ProfileRoute,
+  ReportRoute: ReportRoute,
   SettingsRoute: SettingsRoute,
   WatchRoute: WatchRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

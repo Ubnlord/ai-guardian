@@ -72,6 +72,13 @@ const EN = {
   editProfile: "Edit profile",
   checksMonth: "this month",
   checkSomething: "Check something",
+  insights: "Insights",
+  notifications: "Notifications",
+  allClear: "You're all clear",
+  allClearHint: "No alerts, no warnings. We'll tell you the moment something needs you.",
+  unread: "Unread",
+  dismiss: "Dismiss",
+  seeInsights: "See your insights",
 } as const;
 
 export type CopyKey = keyof typeof EN;
@@ -132,6 +139,13 @@ const FR: Record<CopyKey, string> = {
   editProfile: "Modifier le profil",
   checksMonth: "ce mois-ci",
   checkSomething: "Vérifier quelque chose",
+  insights: "Analyses",
+  notifications: "Notifications",
+  allClear: "Tout est calme",
+  allClearHint: "Aucune alerte. Nous vous prévenons dès que quelque chose vous concerne.",
+  unread: "Non lu",
+  dismiss: "Ignorer",
+  seeInsights: "Voir vos analyses",
 };
 
 const ES: Record<CopyKey, string> = {
@@ -190,6 +204,13 @@ const ES: Record<CopyKey, string> = {
   editProfile: "Editar perfil",
   checksMonth: "este mes",
   checkSomething: "Revisar algo",
+  insights: "Análisis",
+  notifications: "Notificaciones",
+  allClear: "Todo en orden",
+  allClearHint: "Sin alertas ni avisos. Te avisamos en cuanto algo te afecte.",
+  unread: "Sin leer",
+  dismiss: "Descartar",
+  seeInsights: "Ver tus análisis",
 };
 
 const PT: Record<CopyKey, string> = {
@@ -248,6 +269,13 @@ const PT: Record<CopyKey, string> = {
   editProfile: "Editar perfil",
   checksMonth: "este mês",
   checkSomething: "Verificar algo",
+  insights: "Análises",
+  notifications: "Notificações",
+  allClear: "Tudo em ordem",
+  allClearHint: "Sem alertas nem avisos. Avisamos assim que algo precisar de si.",
+  unread: "Não lido",
+  dismiss: "Dispensar",
+  seeInsights: "Ver as suas análises",
 };
 
 const AR: Record<CopyKey, string> = {
@@ -306,6 +334,13 @@ const AR: Record<CopyKey, string> = {
   editProfile: "تعديل الملف",
   checksMonth: "هذا الشهر",
   checkSomething: "افحص شيئاً",
+  insights: "تحليلات",
+  notifications: "الإشعارات",
+  allClear: "كل شيء هادئ",
+  allClearHint: "لا تنبيهات ولا تحذيرات. سنخبرك فوراً عندما يحتاجك شيء.",
+  unread: "غير مقروء",
+  dismiss: "تجاهل",
+  seeInsights: "اطّلع على تحليلاتك",
 };
 
 const DICT: Record<Locale, Record<CopyKey, string>> = { en: EN, fr: FR, es: ES, pt: PT, ar: AR };
